@@ -1,6 +1,23 @@
 name: CI
-on: [push, pull_request]
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
 jobs:
+  # Required check: production (main) only takes release PRs from develop or hotfix/* branches.
+  pr-source:
+    runs-on: ubuntu-latest
+    steps:
+      - name: PRs into main come from develop or hotfix/*
+        env:
+          BASE: ${{ github.base_ref }}
+          HEAD: ${{ github.head_ref }}
+        run: |
+          if [ "$BASE" = "main" ] && [ "$HEAD" != "develop" ] && [[ "$HEAD" != hotfix/* ]]; then
+            echo "::error::PRs into main must come from develop or hotfix/* (got '$HEAD'). Open this PR against develop."
+            exit 1
+          fi
+          echo "ok"
   check:
     runs-on: ubuntu-latest
     services:

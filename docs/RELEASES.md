@@ -15,6 +15,17 @@ Every page belongs to one feature in **`packages/shared/src/release.ts`**. A fea
 - **Always allowed:** login, password reset, accept invite, choose store, and the public bill page.
 - **Today:** every feature is `mock` or `planned`, so production shows an empty app until the first feature goes live. That's intended.
 
+## Branches and environments
+| Branch | Environment | Gets code from | Deploys to |
+| --- | --- | --- | --- |
+| `feat/US-…`, `fix/US-…` | development (your laptop) | branched from `develop` | — |
+| `develop` | **staging** (`APP_STAGE=staging`) | feature PRs | staging web + API, Neon branch `staging` |
+| `main` | **production** (`APP_STAGE=production`) | release PR from `develop`, or `hotfix/*` | production web + API, Neon `main` |
+
+- **Release:** PR `develop` → `main`, title `release: <what>`. After a hotfix into `main`, merge `main` back into `develop`.
+- **Protection (GitHub rulesets):** no direct pushes, no force push, no deleting `main`/`develop`; CI (`check`, `pr-source`) must pass for everyone. Kunal approves every PR (`.github/CODEOWNERS`); as admin he can merge his own PRs through a PR without a second reviewer.
+- **Migrations** run on deploy, staging first. They must work with the code already running: add columns/tables first, remove them in a later release.
+
 ## Moving a feature forward (one at a time)
 1. Pick the next feature in phase order (`docs/HANDOFF.md`).
 2. Set it to `building` while the API is being connected.
