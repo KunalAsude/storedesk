@@ -2,7 +2,7 @@
 
 ## Where we are (27 Nov 2026)
 - **Phase 0 (design) is done.** The full v0 design is merged into `apps/web` with real routes: one page file per URL, one component per file, a shared layout for admin + store. It still runs on **mock data** (`apps/web/lib/mock`).
-- Monorepo is set up with Bun workspaces + Turborepo. `apps/api` (NestJS) only has `/health`; `packages/db` only has the Drizzle config.
+- Monorepo is set up with Bun workspaces + Turborepo. `apps/api` (NestJS) only has `/health`. `packages/db` has the Phase 1 tables, RLS (`rls_user` + `withCompany()`) and seed — local Postgres: `bun run db:up && bun run db:migrate && bun run db:seed` (needs `packages/db/.env`, see `.env.example`).
 - **Next: Phase 1 — foundation** (database, auth, RBAC, audit). See the kickoff prompt below.
 
 Docs: plan (README link) · stories `docs/stories/USER_STORIES.md` · modules `docs/FEATURES.md` · progress `docs/STATUS.md` · colours `docs/THEMES.md` · free services `docs/FREE_STACK.md` · v0 prompt history `docs/v0/`.

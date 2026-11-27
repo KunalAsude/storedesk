@@ -8,6 +8,10 @@
     "dev:web": "bun run --cwd apps/web dev",
     "dev:api": "bun run --cwd apps/api dev",
     "build": "turbo run build",
+    "db:up": "docker compose up -d",
+    "db:generate": "bun run --cwd packages/db generate",
+    "db:migrate": "bun run --cwd packages/db migrate",
+    "db:seed": "bun run --cwd packages/db seed",
     "typecheck": "turbo run typecheck",
     "test": "turbo run test"
   },

@@ -65,6 +65,7 @@
       "name": "@storedesk/db",
       "version": "0.1.0",
       "dependencies": {
+        "@storedesk/shared": "workspace:*",
         "drizzle-orm": "^0.45.0",
         "postgres": "^3.4.5",
       },
