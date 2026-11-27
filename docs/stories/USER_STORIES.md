@@ -24,6 +24,24 @@ As the team, I want every page designed in v0 in one consistent style, so that w
 
 ---
 
+## EPIC 0.5 — Releases
+
+### US-REL-01 · Only finished features in production (web)
+As the team, I want production to show only finished features, so that shops never see half-built pages.
+- Phase 0 · Must · Done · Owner: Kunal
+- [x] Feature list with status in `packages/shared/src/release.ts`
+- [x] Sidebar hides unreleased pages; their URLs show "Page not found"
+- [x] development shows all (with status badges), staging beta + live, production live only; missing env = production
+- [x] CI check: every `/admin` and `/store` page is registered
+
+### US-REL-02 · Release guard on the API
+As the team, I want API routes of unreleased features to return 404 outside development, so that hidden features can't be used directly.
+- Phase 1 · Must · Not started
+- [ ] `@Feature('<key>')` decorator + guard reading `APP_STAGE` and the same release list
+- [ ] Test: a `mock` feature's route is 404 in production and works in development
+
+---
+
 ## EPIC 1 — Accounts and login
 
 ### US-AUTH-01 · Log in

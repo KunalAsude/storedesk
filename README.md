@@ -22,7 +22,8 @@ In the app, use the profile menu → **Preview as** to see the sidebar for Super
 4. [docs/FEATURES.md](docs/FEATURES.md) — modules and which plan has them
 5. [docs/THEMES.md](docs/THEMES.md) — the 6 colour themes and the theme builder
 6. [docs/FREE_STACK.md](docs/FREE_STACK.md) — free services and their limits
-7. [docs/v0/](docs/v0) — the prompts that produced the design (history; reuse for future v0 work)
+7. [docs/RELEASES.md](docs/RELEASES.md) — release flags: only finished features reach production
+8. [docs/v0/](docs/v0) — the prompts that produced the design (history; reuse for future v0 work)
 
 Living plan (Claude Docs): https://claude.ai/artifact/B2ENkZWZ4V4ij9HFWQCSL2
 

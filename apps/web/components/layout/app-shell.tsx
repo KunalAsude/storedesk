@@ -1,4 +1,6 @@
 "use client";
+import { isPathReleased } from "@storedesk/shared";
+import { APP_STAGE, releaseStatusForPath } from "@/lib/release";
 import { ShellContext } from "@/components/layout/shell-context";
 import {
     companies
@@ -171,6 +173,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
     .map((g) => ({
       ...g,
       items: g.items.filter(([, path]) => {
+        if (!isPathReleased(path, APP_STAGE)) return false;
         if (path.startsWith("/admin")) return canAdmin;
         if (canAdmin) return true;
         if (path === "/store/dashboard")
@@ -225,6 +228,24 @@ export function AppShell({ children }: { children: React.ReactNode }) {
     setStoreOpen(false);
   };
   const banner = pathname === "/store/dashboard" && role === "Owner";
+  if (!isPathReleased(pathname, APP_STAGE))
+    return (
+      <main className="access-denied">
+        <section className="panel">
+          <LockKeyhole />
+          <div>
+            <h1>Page not found</h1>
+            <p>The page you’re looking for may have moved.</p>
+            <button
+              className="button primary"
+              onClick={() => route("/store/dashboard")}
+            >
+              Return to dashboard
+            </button>
+          </div>
+        </section>
+      </main>
+    );
   const requiredPermission = pathname.startsWith("/admin")
     ? "admin.view"
     : pathname.startsWith("/store/inventory/")
@@ -288,8 +309,16 @@ export function AppShell({ children }: { children: React.ReactNode }) {
                 >
                   <Icon />
                   <span>{label}</span>
-                  {group.title === "COMING SOON" && (
-                    <span className="nav-soon">Soon</span>
+                  {APP_STAGE === "development" ? (
+                    releaseStatusForPath(path) !== "live" && (
+                      <span className="nav-soon" title="Release status (shown in development only)">
+                        {releaseStatusForPath(path) ?? "unregistered"}
+                      </span>
+                    )
+                  ) : (
+                    group.title === "COMING SOON" && (
+                      <span className="nav-soon">Soon</span>
+                    )
                   )}
                 </button>
               ))}

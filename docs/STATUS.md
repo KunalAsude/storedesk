@@ -4,6 +4,8 @@ Update after every story. One row per area; story-level detail lives in `docs/st
 
 **Status values:** Not started · Design (v0) · Mock UI · Connected (real API) · Tested · Live
 
+What production actually shows is decided by `packages/shared/src/release.ts` (see `docs/RELEASES.md`). Today every feature is `mock`/`planned`, so production shows nothing yet.
+
 | Phase | Area | Stories | Status | Owner | Notes |
 | --- | --- | --- | --- | --- | --- |
 | 0 | Full design in v0 | US-DES-01 | Mock UI ✅ | Kunal | Merged into apps/web with real routes; 40 routes × 2 sizes pixel-identical to the v0 export |
@@ -19,6 +21,7 @@ Update after every story. One row per area; story-level detail lives in `docs/st
 
 | Date | What changed | By |
 | --- | --- | --- |
+| 2026-11-27 | Release flags: `packages/shared/src/release.ts` (planned → mock → building → beta → live); production shows only live, staging beta + live, development everything with badges; CI check that every page is registered | Kunal |
 | 2026-11-27 | Merged v0 design into monorepo: Bun + Turborepo, apps/web (real routes, one component per file, shared AppShell layout), packages/shared (roles, permissions, money), apps/api (/health), packages/db (config). Fixed v0 importing `cn` from an npm package instead of lib/utils. Removed dead POS/cart code from the shell. | Kunal |
 | 2026-11-27 | Reviewed v0 project_6: most follow-up 1 fixes done; routing still fake → fixed in IDE merge; FOLLOWUP-2 written | Kunal |
 | 2026-11-27 | Fresh start: plan, user stories, features, themes, free stack, v0 prompt | Kunal |

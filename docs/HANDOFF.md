@@ -34,8 +34,9 @@ The web app uses `next/font/google`, so the first `dev`/`build` needs internet t
 | `lib/mock/data.ts` | All mock data — replace page by page with API calls |
 | `lib/permissions.ts` | `useCan()` hook; keys and role grants come from `@storedesk/shared` |
 | `lib/theme-builder.ts` | Generates a full theme from 3 colours + contrast checks |
+| `lib/release.ts` | Reads `NEXT_PUBLIC_APP_STAGE`; the shell hides pages that aren't released (see docs/RELEASES.md) |
 
-`packages/shared` holds roles, permission keys + default grants, `formatINR`/`toPaise`. Use it from both web and API.
+`packages/shared` holds roles, permission keys + default grants, `formatINR`/`toPaise`, and **release flags** (`release.ts`: which features each environment shows). Use it from both web and API.
 
 ## Kickoff prompt for Claude Code (paste at the start of every session)
 ```
@@ -45,7 +46,7 @@ For the story I pick:
 1. Explain the design (tables, endpoints, permission keys, UI pages touched) and compare options where there is a real choice. Wait for "go".
 2. Build it: backend first, then connect the existing page (swap mock data for the API, keep the design exactly).
 3. Tests: include "permission refused" and "other company refused". Run `bun run typecheck` and `bun run test`.
-4. Tick the story's boxes, update docs/STATUS.md, stage changed files with git add. Never commit or push. No AI attribution.
+4. Tick the story's boxes, update docs/STATUS.md. If all stories of a feature are Done, propose moving it to "beta" in packages/shared/src/release.ts (never straight to "live"). Run `bun run --cwd apps/web check:release`. Stage changed files with git add. Never commit or push. No AI attribution.
 ```
 
 ## Phase 1 — what to build first (in this order)
@@ -54,7 +55,8 @@ For the story I pick:
 3. **US-AUTH-01…03** Login (email/phone + password), logout, forgot password (Resend free tier), JWT access + rotating refresh token.
 4. **US-RBAC-03** Company isolation: company-scoped DB helper that sets `app.company_id`; cross-company tests.
 5. **US-HIS-01** Audit log writer service.
-6. Web: replace the mock "Preview as" with the real logged-in user (keep the preview switcher only in development).
+6. **US-REL-02** API release guard: `@Feature('store.billing')` on controllers; 404 when the feature isn't released for `APP_STAGE`.
+7. Web: replace the mock "Preview as" with the real logged-in user (keep the preview switcher only in development).
 
 Done when: a super admin logs in and lands on Admin → Analytics; a store user is refused on every `/admin` API and page; tests prove company A can't read company B.
 

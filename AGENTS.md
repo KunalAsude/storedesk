@@ -1,6 +1,6 @@
 # AGENTS.md — rules for every developer and every AI tool
 
-Read in this order before touching code: `docs/HANDOFF.md` → `docs/STATUS.md` → `docs/stories/USER_STORIES.md` → `docs/FEATURES.md` → `docs/THEMES.md` → `docs/FREE_STACK.md`.
+Read in this order before touching code: `docs/HANDOFF.md` → `docs/STATUS.md` → `docs/stories/USER_STORIES.md` → `docs/FEATURES.md` → `docs/THEMES.md` → `docs/RELEASES.md` → `docs/FREE_STACK.md`.
 
 ## Product
 StoreDesk: multi-tenant SaaS for retail shops. One app, two levels: **Admin** (platform owners: analytics, companies, plans, users, history, themes) and **Store** (each company sees only its own store: inventory, billing, sales, customers, reports, staff, settings). First customer: Brand Hub Mens Wear, Kopargaon.
@@ -21,3 +21,4 @@ Bun workspaces + Turborepo · Next.js (design from v0, shadcn/ui) · NestJS API 
 10. **Tests:** every API route has tests incl. permission refused + other-company refused. `bun run test` and `bun run typecheck` pass before a PR.
 11. **Git:** PR into `main`, the other dev reviews. **AI tools only stage changes (`git add`); never commit or push.** No AI attribution in commits, PRs or code.
 12. Pages not designed yet show the shared TodoCard. Don't invent features that are not in a story.
+13. **Release flags** (`docs/RELEASES.md`): every `/admin` or `/store` page is registered in `packages/shared/src/release.ts`. Production shows only `live` features. Move a feature to `beta`/`live` only when all its stories are Done; going `live` is its own PR.
