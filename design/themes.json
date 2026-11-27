@@ -1,0 +1,50 @@
+{
+  "brown": {
+    "name": "Brown and baby blue",
+    "swatches": {
+      "dark": "#3B2418",
+      "page": "#F2E8DA",
+      "button": "#8EC5FF"
+    }
+  },
+  "sage": {
+    "name": "Sage and tomato",
+    "swatches": {
+      "dark": "#2F3A2B",
+      "page": "#F7F5EF",
+      "button": "#E8412C"
+    }
+  },
+  "graphite": {
+    "name": "Graphite and yellow",
+    "swatches": {
+      "dark": "#2B2D31",
+      "page": "#ECEDEF",
+      "button": "#FFC93C"
+    }
+  },
+  "olive": {
+    "name": "Olive and bone",
+    "swatches": {
+      "dark": "#3A3D22",
+      "page": "#EEE7D7",
+      "button": "#4F5330"
+    }
+  },
+  "maroon": {
+    "name": "Maroon and blush",
+    "swatches": {
+      "dark": "#4A1622",
+      "page": "#F6E6E3",
+      "button": "#4A1622"
+    }
+  },
+  "terracotta": {
+    "name": "Terracotta and clay",
+    "swatches": {
+      "dark": "#3A2117",
+      "page": "#EFE4D6",
+      "button": "#A8492B"
+    }
+  }
+}

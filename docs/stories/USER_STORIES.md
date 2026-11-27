@@ -1,0 +1,441 @@
+# User stories
+
+Every piece of work is a story with an ID. Branches and PRs use the ID (`feat/US-INV-03-variant-grid`). When a story is done, tick its boxes, set **Status: Done** and update `docs/STATUS.md`.
+
+- **Priority:** Must (needed for Brand Hub launch) · Should (soon after) · Could (later) · TODO (needs design first)
+- **Phase:** matches the build plan (0 design, 1 foundation, 2 admin, 3 store shell, 4 inventory, 5 billing, 6 history/customers/revenue, 7 analytics + launch)
+- **Status:** Not started · In progress · Review · Done
+- **Owner:** Kunal / Friend / Claude (IDE)
+
+Roles used below: **Super admin**, **Admin**, **Support** (us); **Owner**, **Manager**, **Cashier**, **Stock staff** (a store).
+
+---
+
+## EPIC 0 — Design (v0)
+
+### US-DES-01 · Full app design from v0
+As the team, I want every page designed in v0 in one consistent style, so that we build behind a finished look.
+- Phase 0 · Must · Done · Owner: Kunal
+- [x] One v0 chat produced all admin pages, all store pages, auth pages and states from `docs/v0/PROMPT.md`
+- [x] Uses `apps/web/app/themes.css` tokens; all 6 themes and light/dark switch correctly
+- [x] Looks right at 390 px, 768 px, 1280 px
+- [x] TODO pages show a TODO card
+- [x] Project zip downloaded and committed under `apps/web` (see HANDOFF.md)
+
+---
+
+## EPIC 1 — Accounts and login
+
+### US-AUTH-01 · Log in
+As any user, I want to log in with email (or phone) and password, so that I reach my area.
+- Phase 1 · Must · Not started
+- [ ] Wrong password shows one clear message; 5 wrong tries lock for 15 min
+- [ ] Platform admins land on Admin → Analytics; store users land on their store Dashboard
+- [ ] A user in several stores lands on the last store used
+- [ ] Session stays for 30 days on the same device (refresh token rotates)
+
+### US-AUTH-02 · Log out
+As any user, I want to log out from the profile menu, so that nobody else uses my session.
+- Phase 1 · Must · Not started
+- [ ] Refresh token revoked on the server; back button cannot reopen pages
+
+### US-AUTH-03 · Forgot password
+As any user, I want a reset link by email, so that I can get back in.
+- Phase 1 · Must · Not started
+- [ ] Link valid 30 min, single use; same reply whether or not the email exists
+
+### US-AUTH-04 · Accept invite
+As an invited person, I want to open the invite link and set my name and password, so that my account is ready.
+- Phase 2 · Must · Not started
+- [ ] Link valid 7 days; expired link shows "Ask for a new invite"
+- [ ] After setting a password I land in the right place with the right role
+
+### US-AUTH-05 · My profile and change password
+As any user, I want to edit my name, photo and password, so that my account is up to date.
+- Phase 3 · Should · Not started
+- [ ] Change password needs the current password; all other sessions are logged out
+
+### US-AUTH-06 · Phone login for staff
+As a cashier without email, I want to log in with my phone number, so that I can bill.
+- Phase 3 · Should · TODO (decide: OTP costs money; password-only is free)
+
+---
+
+## EPIC 2 — Roles and permissions (RBAC)
+
+### US-RBAC-01 · Permission keys
+As a developer, I want one list of permission keys shared by API and web, so that both check the same thing.
+- Phase 1 · Must · Not started
+- [ ] Keys in `packages/shared/src/permissions.ts`; default roles built from them
+- [ ] API guard `@Can('key')` on every route; refused calls return 403 with a clear message
+
+### US-RBAC-02 · Sidebar built from permissions
+As any user, I want to see only the menu items I can use, so that the app is simple for me.
+- Phase 3 · Must · Not started
+- [ ] Admin group visible only with a platform role
+- [ ] A cashier sees Dashboard, Billing, Sales history (own), Customers; nothing else
+- [ ] Opening a hidden URL directly shows the 403 page
+
+### US-RBAC-03 · Store data isolation
+As a store owner, I want my data invisible to every other company, so that I can trust the app.
+- Phase 1 · Must · Not started
+- [ ] Postgres RLS on `company_id` for every store table
+- [ ] Automated test: a user of company A gets 404 on every company B record, for every route
+
+### US-RBAC-04 · Custom store roles
+As an owner, I want to create my own role by ticking permissions, so that it fits my shop.
+- Phase 6 · Could · Not started
+
+---
+
+## EPIC 3 — Admin: analytics
+
+### US-ANA-01 · Business KPIs
+As an admin, I want MRR, active companies, new this month, trials ending in 7 days and churned this month, so that I know how the business is doing.
+- Phase 7 (mock UI phase 0) · Must · Not started
+- [ ] Numbers match the subscriptions table exactly (test)
+
+### US-ANA-02 · Charts
+As an admin, I want MRR over 12 months, companies by plan, new vs churned and platform bills per day, so that I see trends.
+- Phase 7 · Should · Not started
+
+### US-ANA-03 · Attention lists
+As an admin, I want lists of expiring subscriptions, companies near plan limits and inactive companies, so that I can act early.
+- Phase 7 · Should · Not started
+
+### US-ANA-04 · More analytics
+- Phase later · TODO: revenue by city, feature usage, cohort retention
+
+---
+
+## EPIC 4 — Admin: companies
+
+### US-CMP-01 · Companies list
+As an admin, I want a searchable, filterable table of all companies, so that I can find any customer fast.
+- Phase 2 · Must · Not started
+- [ ] Columns: company, owner, email, city, plan, status, stores, users, expires on, last active, created
+- [ ] Filters: plan, status, expiring in 7/30 days, city; search by name, owner, email, phone
+
+### US-CMP-02 · Add company
+As an admin, I want to create a company with its first store, plan, trial and owner invite in one form, so that onboarding takes 2 minutes.
+- Phase 2 · Must · Not started
+- [ ] Creates company + store + subscription (Trial) + owner invite email in one transaction
+- [ ] Shows in History
+
+### US-CMP-03 · Company detail
+As an admin, I want one page per company with Overview, Subscription, Services, Stores, Users, Appearance, Activity and Notes tabs, so that I see everything about a customer.
+- Phase 2 · Must · Not started
+- [ ] Overview: business info, KPIs, usage vs plan limits
+
+### US-CMP-04 · Pause and resume a company
+As an admin, I want to pause a company (read-only) and resume it, so that I can handle non-payment or abuse.
+- Phase 2 · Must · Not started
+- [ ] Paused company: reads work, writes return a clear message; banner in the store app
+
+### US-CMP-05 · Internal notes
+As an admin, I want private notes on a company, so that the team remembers calls and promises.
+- Phase 2 · Should · Not started
+
+### US-CMP-06 · Open a company's store (support view)
+As support, I want to view a company's store as read-only, so that I can help them.
+- Phase 3 · Should · Not started
+- [ ] Needs a reason; written to History; clear banner "Viewing as support"
+
+### US-CMP-07 · Delete company
+- Phase later · TODO: data export first, 30-day soft delete
+
+---
+
+## EPIC 5 — Plans and subscriptions
+
+### US-SUB-01 · Manage plans
+As a super admin, I want to create and edit plans with prices, limits and modules, so that we can sell tiers.
+- Phase 2 · Must · Not started
+- [ ] Limits: stores, users, products, bills/month, storage; modules on/off
+
+### US-SUB-02 · Change a company's plan
+As an admin, I want to upgrade or downgrade a company's plan, so that they get the right features.
+- Phase 2 · Must · Not started
+- [ ] Downgrade warns if current usage is above the new limits
+
+### US-SUB-03 · Extend, stop, resume subscription
+As an admin, I want to extend expiry, stop a subscription and resume it, so that I control access.
+- Phase 2 · Must · Not started
+- [ ] Every change writes a subscription event with who and why
+
+### US-SUB-04 · Record a payment (manual)
+As an admin, I want to record a UPI/bank payment and the new expiry, so that companies can pay us before a gateway exists.
+- Phase 2 · Must · Not started
+
+### US-SUB-05 · Automatic status changes
+As the system, I want trials and subscriptions to move to Past due and Expired on their dates, so that nobody has to do it by hand.
+- Phase 3 · Must · Not started
+- [ ] Daily pg-boss job; reminders by email 7, 3, 1 day before expiry
+
+### US-SUB-06 · Store sees its plan
+As an owner, I want to see my plan, expiry and usage in Settings, with banners when trial ends or payment is late, so that I am never surprised.
+- Phase 3 · Must · Not started
+
+### US-SUB-07 · Plan limits enforced
+As the system, I want to block creating beyond plan limits with an upgrade message, so that plans mean something.
+- Phase 4 · Must · Not started
+
+### US-SUB-08 · Online payment for plans
+- Phase later · TODO: Razorpay subscriptions (has fees, decide when we charge)
+
+---
+
+## EPIC 6 — Users and invitations
+
+### US-USR-01 · Invite by email
+As an admin, I want to invite a person by email with a platform role or a company + store role, so that they can join.
+- Phase 2 · Must · Not started
+- [ ] Email via Resend; link expires in 7 days; resend and revoke
+
+### US-USR-02 · All users list
+As an admin, I want to see every user, their companies, roles and last login, so that I can support them.
+- Phase 2 · Should · Not started
+
+### US-USR-03 · Deactivate user / reset password
+As an admin or owner, I want to deactivate a user or send a reset, so that access stays under control.
+- Phase 2 · Must · Not started
+- [ ] Deactivated user is logged out within 15 min (next token refresh) and can't log in
+
+---
+
+## EPIC 7 — History (audit)
+
+### US-HIS-01 · Audit log
+As an admin, I want one timeline of important actions with filters and before/after values, so that we know who did what.
+- Phase 1 (writing) / 2 (page) · Must · Not started
+- [ ] Logged: company/plan/subscription changes, invites, logins as support, role changes, theme changes, bill cancels, stock adjustments, settings changes
+
+### US-HIS-02 · Export and alerts
+- Phase later · TODO
+
+---
+
+## EPIC 8 — Themes and appearance
+
+### US-THM-01 · Platform themes on/off
+As a super admin, I want to enable/disable each of the 6 themes and set the platform default, so that we control the look.
+- Phase 2 · Should · Not started
+
+### US-THM-02 · Themes per company
+As an admin, I want to choose which themes a company may use and its default theme, so that each customer gets the right look.
+- Phase 2 · Should · Not started
+- [ ] Company detail → Appearance tab; change is audited
+
+### US-THM-03 · Store picks a theme
+As an owner, I want to pick one of my allowed themes and upload my logo, so that the app feels like my shop.
+- Phase 3 · Should · Not started
+- [ ] Logo shows in sidebar, receipts and the public bill page
+
+### US-THM-05 · Custom themes (theme builder)
+As a super admin, I want to create a theme from three colours (dark, page, button) with a live preview and contrast check, so that we can add or improve themes without code changes.
+- Phase 2 · Should · Not started
+- [ ] Full token set generated from 3 colours (light + dark), stored in the database as JSON
+- [ ] Contrast check (WCAG AA) blocks saving a failing theme; "Fix automatically" option
+- [ ] Custom themes behave like presets: enable/disable, set default, allow per company
+- [ ] Applied at runtime via CSS variables; audited
+
+### US-THM-04 · Light / dark per user
+As any user, I want a light/dark/system toggle at the top right, so that I can use the app comfortably.
+- Phase 0 (UI) / 3 · Must · Not started
+
+---
+
+## EPIC 9 — Store shell and settings
+
+### US-STO-01 · App shell
+As a store user, I want the collapsible sidebar, top navbar (search, store switcher, alerts, theme, profile), so that I can move around quickly.
+- Phase 3 · Must · Not started
+
+### US-STO-02 · Store settings
+As an owner, I want to edit store profile, billing (title, prefix, footer, round-off), printing, payments (UPI ID), taxes, appearance, so that bills look right.
+- Phase 3 · Must · Not started
+
+### US-STO-03 · Store switcher
+As a user with more than one store, I want to switch store from the navbar, so that I manage each one.
+- Phase 3 · Should · Not started
+
+### US-STO-04 · Global search (⌘K)
+As any user, I want one search for pages, products, bills and customers, so that I find things fast.
+- Phase 6 · Should · Not started
+
+---
+
+## EPIC 10 — Inventory
+
+### US-INV-01 · Categories
+As an owner, I want departments → categories → sub-categories, so that products are organised (Men's wear → Shirts → Formal).
+- Phase 4 · Must · Not started
+
+### US-INV-02 · Size sets and colours
+As an owner, I want reusable size sets (S–XXL, 28–40, kids ages) and a colour list, so that adding products is fast.
+- Phase 4 · Must · Not started
+
+### US-INV-03 · Add product with variants
+As an owner, I want to add a product with photos, prices and a size × colour grid with stock per cell, so that each variant is tracked.
+- Phase 4 · Must · Not started
+- [ ] SKU auto-made, unique per company; barcode = SKU unless scanned
+- [ ] Cost price visible only with `prices.view_cost`
+- [ ] Photos resized and stored in R2
+
+### US-INV-04 · Products list
+As a store user, I want products as a table or grid with search and filters, so that I find stock quickly.
+- Phase 4 · Must · Not started
+
+### US-INV-05 · Stock in (purchase)
+As stock staff, I want to record goods received from a supplier, so that stock goes up with a record.
+- Phase 4 · Must · Not started
+
+### US-INV-06 · Stock adjustment
+As an owner, I want to correct stock with a reason (damaged, lost, count fix), so that numbers stay true.
+- Phase 4 · Must · Not started
+- [ ] Never edits stock directly; adds a movement; audited
+
+### US-INV-07 · Stock page and low stock
+As an owner, I want stock per variant, low/out of stock and stock value, so that I know what to reorder.
+- Phase 4 · Must · Not started
+
+### US-INV-08 · Variant history
+As an owner, I want every movement for a variant (sale, purchase, return, adjust), so that I can explain any number.
+- Phase 4 · Must · Not started
+
+### US-INV-09 · Suppliers
+As an owner, I want a supplier list with purchase history, so that I know who supplies what.
+- Phase 4 · Should · Not started
+
+### US-INV-10 · CSV import
+As an owner, I want to import products from Excel/CSV, so that setup is fast.
+- Phase 4 · Should · Not started
+
+### US-INV-11 · Barcode labels
+- Phase later · TODO: label printer sizes
+
+---
+
+## EPIC 11 — Billing (POS)
+
+### US-BIL-01 · Make a bill from inventory
+As a cashier, I want to search or scan a product, pick size and colour, set qty, so that I bill fast.
+- Phase 5 · Must · Not started
+- [ ] 3-item bill in under 30 seconds on a mid-range Android phone
+
+### US-BIL-02 · Quick item
+As a cashier, I want to add an item not in inventory (name, size, price), so that a sale is never blocked.
+- Phase 5 · Must · Not started
+
+### US-BIL-03 · Discounts
+As a cashier, I want item and bill discounts (% or ₹) within my limit, so that I can bargain.
+- Phase 5 · Must · Not started
+- [ ] Server recalculates and enforces the limit
+
+### US-BIL-04 · Payments
+As a cashier, I want cash (with change), UPI QR, card, udhaar and split payments, so that I take any payment.
+- Phase 5 · Must · Not started
+
+### US-BIL-05 · Save bill safely
+As the system, I want gap-free bill numbers per store per financial year and double-tap protection, so that books are correct.
+- Phase 5 · Must · Not started
+- [ ] 20 parallel saves → 20 unique, consecutive numbers (test)
+- [ ] Stock cut in the same transaction as the bill
+
+### US-BIL-06 · Print and share
+As a cashier, I want to print on a 58/80 mm thermal printer, download a PDF and share on WhatsApp, so that the customer gets the bill.
+- Phase 5 · Must · Not started
+
+### US-BIL-07 · Hold bills
+As a cashier, I want to park a bill and start another, so that I can serve two customers.
+- Phase 5 · Should · Not started
+
+### US-BIL-08 · Customer on bill
+As a cashier, I want to add a customer by mobile number (auto-fill repeat customers), so that we build a customer list.
+- Phase 5 · Should · Not started
+
+---
+
+## EPIC 12 — Sales history and returns
+
+### US-SAL-01 · Sales list
+As an owner, I want all bills with search and filters (date, payment mode, status, staff), so that I can find any sale.
+- Phase 6 · Must · Not started
+- [ ] Cashiers without `sales.view_all` see only their own bills
+
+### US-SAL-02 · Bill detail and reprint
+As a store user, I want to open a bill, reprint it and resend on WhatsApp, so that customers get copies.
+- Phase 6 · Must · Not started
+
+### US-SAL-03 · Cancel bill
+As an owner, I want to cancel a bill with a reason, so that mistakes are fixed without deleting history.
+- Phase 6 · Must · Not started
+- [ ] Stock returns; bill shows Cancelled; audited
+
+### US-SAL-04 · Returns and exchanges
+As a cashier, I want to return items as a credit note or exchange, so that returns are recorded.
+- Phase 6 · Should · Not started
+
+---
+
+## EPIC 13 — Customers and udhaar
+
+### US-CUS-01 · Customers list and detail
+As an owner, I want each customer's visits, spend and bills, so that I know my regulars.
+- Phase 6 · Should · Not started
+
+### US-CUS-02 · Udhaar (credit) and collection
+As an owner, I want to see dues and record payments against them, so that money owed is tracked.
+- Phase 6 · Should · Not started
+
+### US-CUS-03 · WhatsApp reminder
+As an owner, I want a one-tap WhatsApp reminder with the due amount, so that I collect faster.
+- Phase 6 · Could · Not started (free: uses wa.me links, not the paid API)
+
+---
+
+## EPIC 14 — Revenue and reports
+
+### US-REP-01 · Store dashboard
+As an owner, I want today/7/30-day sales, bills, average bill, items sold, udhaar and stock value with charts, so that I see my shop at a glance.
+- Phase 6 · Must · Not started
+- [ ] Totals equal the sum of bills (test)
+
+### US-REP-02 · Revenue reports
+As an owner, I want revenue by day, month, payment mode and staff, with CSV export, so that I can do accounts.
+- Phase 6 · Should · Not started
+
+### US-REP-03 · Product reports
+As an owner, I want best sellers, sales by category/size/colour and dead stock, so that I buy smarter.
+- Phase 6 · Should · Not started
+
+### US-REP-04 · Profit
+As an owner, I want profit (sales minus cost), so that I know what I actually earn.
+- Phase 6 · Could · Not started
+
+---
+
+## EPIC 15 — Staff
+
+### US-STF-01 · Invite staff
+As an owner, I want to invite staff with a role and discount limit, so that they can work in the app.
+- Phase 3 · Must · Not started
+
+### US-STF-02 · Manage staff
+As an owner, I want to change roles, limits and deactivate staff, so that access matches the job.
+- Phase 3 · Must · Not started
+
+---
+
+## EPIC 16 — Coming soon (TODO, design later)
+
+| ID | Idea | Notes |
+| --- | --- | --- |
+| US-TODO-01 | Offers engine (% off, buy X get Y, combo) | Pure function in `packages/shared`, fully tested |
+| US-TODO-02 | Online store + posts (new arrivals) | Enquiry-only first |
+| US-TODO-03 | Enquiries inbox | From the online store |
+| US-TODO-04 | Expenses | Simple expense log per store |
+| US-TODO-05 | Branches + stock transfer | Needs multi-store limits |
+| US-TODO-06 | Integrations | Tally export, WhatsApp Business API (paid) |
+| US-TODO-07 | Announcements to all stores | Admin composer + banner |
+| US-TODO-08 | Offline billing | IndexedDB queue + sync |
