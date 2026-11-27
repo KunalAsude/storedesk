@@ -96,8 +96,8 @@ As any user, I want to see only the menu items I can use, so that the app is sim
 
 ### US-RBAC-03 · Store data isolation
 As a store owner, I want my data invisible to every other company, so that I can trust the app.
-- Phase 1 · Must · Not started
-- [ ] Postgres RLS on `company_id` for every store table
+- Phase 1 · Must · In progress
+- [x] Postgres RLS on `company_id` for every store table (`packages/db/migrations/0001_rls.sql`; `db.test.ts` fails if a `company_id` table has no RLS)
 - [ ] Automated test: a user of company A gets 404 on every company B record, for every route
 
 ### US-RBAC-04 · Custom store roles

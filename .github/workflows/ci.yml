@@ -3,6 +3,22 @@ on: [push, pull_request]
 jobs:
   check:
     runs-on: ubuntu-latest
+    services:
+      # Throwaway Postgres for packages/db tests (same image and test-only credentials as docker-compose.yml)
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_USER: storedesk
+          POSTGRES_PASSWORD: storedesk
+          POSTGRES_DB: storedesk
+        ports: ["5432:5432"]
+        options: >-
+          --health-cmd "pg_isready -U storedesk"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 10
+    env:
+      TEST_DATABASE_URL: postgres://storedesk:storedesk@localhost:5432/storedesk
     steps:
       - uses: actions/checkout@v4
       - uses: oven-sh/setup-bun@v2

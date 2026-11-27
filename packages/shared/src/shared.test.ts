@@ -1,5 +1,12 @@
 import { describe, expect, test } from "bun:test";
-import { formatINR, hasPermission, toPaise } from "./index";
+import { PLATFORM_ROLES, PLATFORM_ROLE_KEYS, ROLE_LABELS, STORE_ROLES, STORE_ROLE_KEYS, formatINR, hasPermission, toPaise } from "./index";
+
+describe("role keys", () => {
+  test("every key has a label and every label has a key", () => {
+    expect(PLATFORM_ROLE_KEYS.map((k) => ROLE_LABELS[k])).toEqual([...PLATFORM_ROLES]);
+    expect(STORE_ROLE_KEYS.map((k) => ROLE_LABELS[k])).toEqual([...STORE_ROLES]);
+  });
+});
 
 describe("money", () => {
   test("formats Indian grouping and hides .00", () => {

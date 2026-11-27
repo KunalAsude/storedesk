@@ -7,10 +7,13 @@
   "types": "src/index.ts",
   "scripts": {
     "generate": "drizzle-kit generate",
-    "migrate": "drizzle-kit migrate",
-    "typecheck": "tsc --noEmit"
+    "migrate": "bun src/migrate.ts",
+    "seed": "bun src/seed.ts",
+    "typecheck": "tsc --noEmit",
+    "test": "bun test"
   },
   "dependencies": {
+    "@storedesk/shared": "workspace:*",
     "drizzle-orm": "^0.45.0",
     "postgres": "^3.4.5"
   },
