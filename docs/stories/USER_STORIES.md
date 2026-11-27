@@ -34,6 +34,21 @@ As the team, I want production to show only finished features, so that shops nev
 - [x] development shows all (with status badges), staging beta + live, production live only; missing env = production
 - [x] CI check: every `/admin` and `/store` page is registered
 
+### US-OPS-01 · Branches and environments
+As the team, I want `develop` = staging and a protected `main` = production, so that nothing reaches shops without review and CI.
+- Phase 1 · Must · In progress · Owner: Kunal
+- [ ] `develop` branch exists and is the default branch
+- [ ] Rulesets: PR + CI required on `main` and `develop`, no force push/delete; Kunal approves (CODEOWNERS), admin may merge own PRs
+- [x] CI `pr-source` check: PRs into `main` only from `develop` or `hotfix/*`
+- [x] AGENTS.md, RELEASES.md, HANDOFF.md describe the flow
+
+### US-OPS-02 · Deploy staging and production
+As the team, I want `develop` to deploy to staging and `main` to production with migrations run on deploy, so that releases are one merge.
+- Phase 1 · Must · Not started (when we first deploy)
+- [ ] GitHub Environments `staging` / `production` hold secrets; production deploy needs approval
+- [ ] Neon `main` (prod) + branch `staging`; Render API ×2; Vercel production + preview (`develop`)
+- [ ] `db:migrate` runs before the new API starts, staging first
+
 ### US-REL-02 · Release guard on the API
 As the team, I want API routes of unreleased features to return 404 outside development, so that hidden features can't be used directly.
 - Phase 1 · Must · Not started

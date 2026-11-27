@@ -8,6 +8,7 @@ What production actually shows is decided by `packages/shared/src/release.ts` (s
 
 | Phase | Area | Stories | Status | Owner | Notes |
 | --- | --- | --- | --- | --- | --- |
+| 2026-11-27 | US-OPS-01: `develop` = staging, `main` = production; GitHub rulesets (PR + CI, no force push), CODEOWNERS (Kunal approves), CI `pr-source` check; AGENTS.md rules 3 + 11 updated | Kunal |
 | 0 | Full design in v0 | US-DES-01 | Mock UI ✅ | Kunal | Merged into apps/web with real routes; 40 routes × 2 sizes pixel-identical to the v0 export |
 | 1 | Repo, CI, database, auth | US-AUTH-01…03, US-RBAC-01, 03, US-HIS-01 | In progress | Kunal | Step 1 (database base) done: tables, RLS via `rls_user` + `withCompany()`, seed, isolation tests. Next: step 2 `@Can` guard |
 | 2 | Admin: companies, plans, users, history, themes | US-CMP, US-SUB-01…04, US-USR, US-HIS, US-THM-01…02 | Not started | | |
