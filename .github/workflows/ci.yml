@@ -44,3 +44,5 @@ jobs:
       - run: bun run test
       - run: bun run --cwd apps/web check:release
       - run: bun run --cwd apps/web build
+      # The deploy image must keep building (Render builds the same Dockerfile).
+      - run: docker build -f apps/api/Dockerfile -t storedesk-api:ci .

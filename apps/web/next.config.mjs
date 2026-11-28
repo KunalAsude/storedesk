@@ -1,9 +1,19 @@
 /** @type {import('next').NextConfig} */
+// The browser only talks to this site: /api/* is proxied to the API, so the refresh
+// cookie is first-party and CSP connect-src 'self' holds (docs/DEPLOY.md).
+// API_URL is set per Vercel environment; locally it defaults to the dev API.
+const apiUrl = (process.env.API_URL ?? (process.env.NODE_ENV === "development" ? "http://localhost:4000" : "")).replace(/\/$/, "");
+// Rewrites are fixed at build time: a Vercel build without API_URL would 404 every /api call.
+if (process.env.VERCEL && !apiUrl) throw new Error("API_URL is not set for this Vercel environment (docs/DEPLOY.md step 3)");
+
 const nextConfig = {
   transpilePackages: ["@storedesk/shared"],
   poweredByHeader: false,
   images: {
     unoptimized: true,
+  },
+  async rewrites() {
+    return apiUrl ? [{ source: "/api/:path*", destination: `${apiUrl}/:path*` }] : [];
   },
   async headers() {
     return [
