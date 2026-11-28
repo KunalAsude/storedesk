@@ -1,6 +1,6 @@
 # StoreDesk
 
-Multi-tenant inventory + billing SaaS for retail shops. One app, two levels: **Admin** for us (analytics, companies, plans, users, history, themes) and **Store** for each company (inventory, billing, sales, customers, reports, staff, settings). First customer: Brand Hub Mens Wear, Kopargaon.
+Multi-tenant inventory + billing SaaS for retail shops. One app, two levels: **Admin** for us (analytics, companies, plans, users, history, themes) and **Store** for each company (inventory, billing, sales, customers, reports, staff, settings).
 
 **Status:** design done and merged (mock data). Next: Phase 1 — database, auth, RBAC. See [docs/STATUS.md](docs/STATUS.md).
 
