@@ -1,5 +1,5 @@
 import { describe, expect, test } from "bun:test";
-import { PLATFORM_ROLES, PLATFORM_ROLE_KEYS, ROLE_LABELS, STORE_ROLES, STORE_ROLE_KEYS, formatINR, hasPermission, toPaise } from "./index";
+import { PLATFORM_ROLES, PLATFORM_ROLE_KEYS, ROLE_LABELS, STORE_ROLES, STORE_ROLE_KEYS, formatINR, hasPermission, roleKeyCan, toPaise } from "./index";
 
 describe("role keys", () => {
   test("every key has a label and every label has a key", () => {
@@ -23,6 +23,12 @@ describe("permissions", () => {
     expect(hasPermission("Cashier", "billing.create")).toBe(true);
     expect(hasPermission("Cashier", "admin.view")).toBe(false);
     expect(hasPermission("Cashier", "inventory.edit")).toBe(false);
+  });
+  test("role keys use the same grants as labels", () => {
+    expect(roleKeyCan("cashier", "billing.create")).toBe(true);
+    expect(roleKeyCan("stock_staff", "billing.create")).toBe(false);
+    expect(roleKeyCan("super_admin", "admin.view")).toBe(true);
+    expect(roleKeyCan("old_role" as never, "dashboard.view")).toBe(false);
   });
   test("owner has no platform admin access", () => {
     expect(hasPermission("Owner", "admin.view")).toBe(false);
