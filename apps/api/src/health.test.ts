@@ -16,5 +16,17 @@ afterAll(() => app.close());
 test("GET /health", async () => {
   const res = await fetch(`${base}/health`);
   expect(res.status).toBe(200);
-  expect(await res.json()).toEqual({ ok: true, service: "storedesk-api" });
+  expect(await res.json()).toMatchObject({ ok: true, service: "storedesk-api", stage: "development" });
+});
+
+test("GET /health hides the IP echo in production", async () => {
+  const prod = await createApp({ config: testConfig(undefined, { stage: "production" }) });
+  prod.useLogger(false);
+  await prod.listen(0);
+  try {
+    const url = (await prod.getUrl()).replace("[::1]", "localhost");
+    expect(await (await fetch(`${url}/health`)).json()).toEqual({ ok: true, service: "storedesk-api" });
+  } finally {
+    await prod.close();
+  }
 });

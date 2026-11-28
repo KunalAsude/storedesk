@@ -1,0 +1,55 @@
+# Render Blueprint: both API environments (docs/DEPLOY.md). Secrets marked sync:false are
+# entered once in the Render dashboard and never committed. Link the Blueprint to `main`,
+# so a change here reaches the production service only with a release.
+services:
+  - type: web
+    name: storedesk-api
+    runtime: docker
+    plan: free
+    region: singapore # closest Render region to India; put Neon in AWS Singapore too
+    branch: main
+    dockerContext: .
+    dockerfilePath: ./apps/api/Dockerfile
+    healthCheckPath: /health
+    autoDeployTrigger: checksPass # deploy only after GitHub CI is green
+    buildFilter:
+      paths: [apps/api/**, packages/db/**, packages/shared/**, package.json, bun.lock, tsconfig.base.json, .dockerignore, render.yaml]
+    envVars:
+      - key: APP_STAGE
+        value: production
+      - key: DATABASE_URL # Neon main branch (pooled connection string)
+        sync: false
+      - key: JWT_SECRET
+        generateValue: true # Render creates a random secret once
+      - key: WEB_ORIGIN # e.g. https://storedesk.vercel.app
+        sync: false
+      - key: REFRESH_COOKIE_PATH # the web proxies /api/* to this API
+        value: /api/auth
+      - key: TRUST_PROXY_HOPS # Vercel rewrite + Render proxy; check /health yourIp on staging
+        value: "2"
+
+  - type: web
+    name: storedesk-api-staging
+    runtime: docker
+    plan: free
+    region: singapore
+    branch: develop
+    dockerContext: .
+    dockerfilePath: ./apps/api/Dockerfile
+    healthCheckPath: /health
+    autoDeployTrigger: checksPass
+    buildFilter:
+      paths: [apps/api/**, packages/db/**, packages/shared/**, package.json, bun.lock, tsconfig.base.json, .dockerignore, render.yaml]
+    envVars:
+      - key: APP_STAGE
+        value: staging
+      - key: DATABASE_URL # Neon "staging" branch (pooled connection string)
+        sync: false
+      - key: JWT_SECRET
+        generateValue: true # different from production
+      - key: WEB_ORIGIN # the Vercel preview URL of the develop branch
+        sync: false
+      - key: REFRESH_COOKIE_PATH
+        value: /api/auth
+      - key: TRUST_PROXY_HOPS
+        value: "2"

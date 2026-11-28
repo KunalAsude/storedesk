@@ -6,7 +6,8 @@ export const MIGRATIONS_DIR = new URL("../migrations", import.meta.url).pathname
 
 /** Applies all pending migrations as the login (owner) user in `url`. */
 export async function runMigrations(url: string) {
-  const client = postgres(url, { max: 1, onnotice: () => {} });
+  // prepare: false so it also works through Neon's pooled (PgBouncer) connection string.
+  const client = postgres(url, { max: 1, prepare: false, onnotice: () => {} });
   try {
     await migrate(drizzle(client), { migrationsFolder: MIGRATIONS_DIR });
   } finally {

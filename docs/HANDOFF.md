@@ -5,7 +5,7 @@
 - Monorepo is set up with Bun workspaces + Turborepo. `apps/api` (NestJS) only has `/health`. `packages/db` has the Phase 1 tables, RLS (`rls_user` + `withCompany()`) and seed — local Postgres: `bun run db:up && bun run db:migrate && bun run db:seed` (needs `packages/db/.env`, see `.env.example`).
 - **Next: Phase 1 — foundation** (database, auth, RBAC, audit). See the kickoff prompt below.
 
-Docs: plan (README link) · stories `docs/stories/USER_STORIES.md` · modules `docs/FEATURES.md` · progress `docs/STATUS.md` · colours `docs/THEMES.md` · free services `docs/FREE_STACK.md` · v0 prompt history `docs/v0/`.
+Docs: plan (README link) · stories `docs/stories/USER_STORIES.md` · modules `docs/FEATURES.md` · progress `docs/STATUS.md` · deploy `docs/DEPLOY.md` · colours `docs/THEMES.md` · free services `docs/FREE_STACK.md` · v0 prompt history `docs/v0/`.
 
 ## Git flow
 `feat/US-XXX-…` from `develop` → PR into `develop` (= staging) → release PR `develop` → `main` (= production). Kunal approves; CI must pass. Details: `docs/RELEASES.md`.
