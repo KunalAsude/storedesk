@@ -1,11 +1,11 @@
 import type { INestApplication } from "@nestjs/common";
 import { METHOD_METADATA, PATH_METADATA } from "@nestjs/common/constants";
 import { MetadataScanner, ModulesContainer } from "@nestjs/core";
-import { CAN_KEY, PUBLIC_KEY } from "./can.decorator";
+import { CAN_KEY, LOGGED_IN_KEY, PUBLIC_KEY } from "./can.decorator";
 
 /**
  * Lists "Controller.method" for every route Nest registered in `app` (dynamic modules,
- * forwardRef and inherited methods included) that has neither @Can nor @Public.
+ * forwardRef and inherited methods included) that has none of @Can, @LoggedIn, @Public.
  */
 export function findUnguardedRoutes(app: INestApplication): string[] {
   const scanner = new MetadataScanner();
@@ -14,14 +14,16 @@ export function findUnguardedRoutes(app: INestApplication): string[] {
     for (const wrapper of mod.controllers.values()) {
       const controller = wrapper.metatype as (abstract new (...args: never[]) => unknown) | null;
       if (!controller?.prototype) continue;
-      const classGuarded = Reflect.getMetadata(CAN_KEY, controller) ?? Reflect.getMetadata(PUBLIC_KEY, controller);
+      const marked = (t: object) =>
+        Reflect.getMetadata(CAN_KEY, t) ?? Reflect.getMetadata(LOGGED_IN_KEY, t) ?? Reflect.getMetadata(PUBLIC_KEY, t);
+      const classGuarded = marked(controller);
       for (const name of scanner.getAllMethodNames(controller.prototype)) {
         const handler = (controller.prototype as Record<string, unknown>)[name];
         if (typeof handler !== "function") continue;
         const isRoute =
           Reflect.getMetadata(PATH_METADATA, handler) !== undefined && Reflect.getMetadata(METHOD_METADATA, handler) !== undefined;
         if (!isRoute) continue;
-        const guarded = Reflect.getMetadata(CAN_KEY, handler) ?? Reflect.getMetadata(PUBLIC_KEY, handler) ?? classGuarded;
+        const guarded = marked(handler) ?? classGuarded;
         if (!guarded) missing.add(`${controller.name}.${name}`);
       }
     }

@@ -2,7 +2,7 @@
 // migrations/0001_rls.sql (drizzle-kit does not manage them).
 import type { PlatformRoleKey, StoreRoleKey } from "@storedesk/shared";
 import { sql } from "drizzle-orm";
-import { boolean, check, foreignKey, index, jsonb, pgTable, text, timestamp, unique, uniqueIndex, uuid } from "drizzle-orm/pg-core";
+import { boolean, check, foreignKey, index, integer, jsonb, pgTable, text, timestamp, unique, uniqueIndex, uuid } from "drizzle-orm/pg-core";
 
 const id = () => uuid("id").primaryKey().defaultRandom();
 const createdAt = () => timestamp("created_at", { withTimezone: true }).notNull().defaultNow();
@@ -20,6 +20,11 @@ export const users = pgTable(
     platformRole: text("platform_role").$type<PlatformRoleKey>(),
     isActive: boolean("is_active").notNull().default(true),
     lastLoginAt: timestamp("last_login_at", { withTimezone: true }),
+    // US-AUTH-01: 5 wrong passwords lock the account for 15 min
+    failedLogins: integer("failed_logins").notNull().default(0),
+    lockedUntil: timestamp("locked_until", { withTimezone: true }),
+    // store the user lands in after login (no FK: stores is declared below; checked against memberships)
+    lastStoreId: uuid("last_store_id"),
     createdAt: createdAt(),
   },
   (t) => [
@@ -116,6 +121,8 @@ export const sessions = pgTable(
       .notNull()
       .references(() => users.id),
     refreshTokenHash: text("refresh_token_hash").notNull().unique(),
+    // all rotations of one login; reuse of an old token revokes the whole family
+    familyId: uuid("family_id").notNull().defaultRandom(),
     expiresAt: timestamp("expires_at", { withTimezone: true }).notNull(),
     revokedAt: timestamp("revoked_at", { withTimezone: true }),
     replacedBy: uuid("replaced_by"),
@@ -123,7 +130,7 @@ export const sessions = pgTable(
     userAgent: text("user_agent"),
     createdAt: createdAt(),
   },
-  (t) => [index("sessions_user_idx").on(t.userId)],
+  (t) => [index("sessions_user_idx").on(t.userId), index("sessions_family_idx").on(t.familyId)],
 );
 
 // Append-only. company_id null = platform event.

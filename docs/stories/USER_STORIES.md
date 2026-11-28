@@ -48,6 +48,8 @@ As the team, I want `develop` to deploy to staging and `main` to production with
 - [ ] GitHub Environments `staging` / `production` hold secrets; production deploy needs approval
 - [ ] Neon `main` (prod) + branch `staging`; Render API ×2; Vercel production + preview (`develop`)
 - [ ] `db:migrate` runs before the new API starts, staging first
+- [ ] Web calls the API through a Next.js rewrite (`/api/*`) so the refresh cookie is first-party (Safari blocks cross-site cookies between vercel.app and onrender.com); set `REFRESH_COOKIE_PATH=/api/auth` and `TRUST_PROXY_HOPS` to match, and check `req.ip` once on staging
+- [ ] `JWT_SECRET` (32+ random chars) set per environment, different for staging and production
 
 ### US-REL-02 · Release guard on the API
 As the team, I want API routes of unreleased features to return 404 outside development, so that hidden features can't be used directly.
@@ -61,11 +63,12 @@ As the team, I want API routes of unreleased features to return 404 outside deve
 
 ### US-AUTH-01 · Log in
 As any user, I want to log in with email (or phone) and password, so that I reach my area.
-- Phase 1 · Must · Not started
-- [ ] Wrong password shows one clear message; 5 wrong tries lock for 15 min
-- [ ] Platform admins land on Admin → Analytics; store users land on their store Dashboard
-- [ ] A user in several stores lands on the last store used
-- [ ] Session stays for 30 days on the same device (refresh token rotates)
+- Phase 1 · Must · In progress (API done; web login page connects in Phase 1 step 9)
+- [x] Wrong password shows one clear message; 5 wrong tries lock for 15 min (API: `INVALID_CREDENTIALS`, `ACCOUNT_LOCKED`)
+- [x] Platform admins land on Admin → Analytics; store users land on their store Dashboard (API returns `landing`)
+- [x] A user in several stores lands on the last store used (`users.last_store_id`)
+- [x] Session stays for 30 days on the same device (refresh token rotates; reuse revokes the login)
+- [ ] Web login page uses `POST /auth/login` and refreshes silently, one refresh at a time across tabs; on 409 `REFRESH_RACE` retry once (step 9)
 
 ### US-AUTH-02 · Log out
 As any user, I want to log out from the profile menu, so that nobody else uses my session.
