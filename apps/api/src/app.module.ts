@@ -1,7 +1,10 @@
-import { Controller, Get, Module } from "@nestjs/common";
-import { APP_GUARD } from "@nestjs/core";
+import { Controller, type DynamicModule, Get, Module } from "@nestjs/common";
+import { AuthModule } from "./auth/auth.module";
 import { Public } from "./auth/can.decorator";
-import { CanGuard } from "./auth/can.guard";
+import { type Clock, systemClock } from "./common/clock";
+import type { AppConfig } from "./config";
+import { CoreModule } from "./core.module";
+import { DbModule } from "./db/db.module";
 
 @Controller()
 class HealthController {
@@ -13,9 +16,9 @@ class HealthController {
   }
 }
 
-@Module({
-  controllers: [HealthController],
-  // Every route must have @Can('key') or @Public() (AGENTS.md rule 4).
-  providers: [{ provide: APP_GUARD, useClass: CanGuard }],
-})
-export class AppModule {}
+@Module({ controllers: [HealthController] })
+export class AppModule {
+  static register(config: AppConfig, clock: Clock = systemClock): DynamicModule {
+    return { module: AppModule, imports: [CoreModule.register(config, clock), DbModule, AuthModule] };
+  }
+}

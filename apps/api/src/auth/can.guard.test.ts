@@ -4,6 +4,7 @@ import { Controller, Get, Module } from "@nestjs/common";
 import { APP_GUARD, NestFactory } from "@nestjs/core";
 import type { NextFunction, Response } from "express";
 import { AppModule } from "../app.module";
+import { testConfig } from "../test-utils";
 import type { AuthedRequest, AuthUser } from "./auth-user";
 import { Can, Public } from "./can.decorator";
 import { CanGuard } from "./can.guard";
@@ -146,7 +147,7 @@ describe("route coverage", () => {
   });
 
   test("every route in the real API has @Can or @Public", async () => {
-    const real = await NestFactory.create(AppModule, { logger: false });
+    const real = await NestFactory.create(AppModule.register(testConfig()), { logger: false });
     await real.init();
     try {
       expect(findUnguardedRoutes(real)).toEqual([]);

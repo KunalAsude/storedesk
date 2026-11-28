@@ -4,6 +4,7 @@ import type { Request } from "express";
 /** Who is calling. Filled from the access token (US-AUTH-01); the company scope comes in US-RBAC-03. */
 export interface AuthUser {
   userId: string;
+  sessionId?: string;
   platformRole?: PlatformRoleKey | null;
   /** Role in the store this request is for. */
   storeRole?: StoreRoleKey | null;
