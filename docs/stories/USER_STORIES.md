@@ -36,9 +36,9 @@ As the team, I want production to show only finished features, so that shops nev
 
 ### US-OPS-01 · Branches and environments
 As the team, I want `develop` = staging and a protected `main` = production, so that nothing reaches shops without review and CI.
-- Phase 1 · Must · In progress · Owner: Kunal
-- [ ] `develop` branch exists and is the default branch
-- [ ] Rulesets: PR + CI required on `main` and `develop`, no force push/delete; Kunal approves (CODEOWNERS), admin may merge own PRs
+- Phase 1 · Must · Done · Owner: Kunal
+- [x] `develop` branch exists and is the default branch
+- [x] Rulesets: PR + CI required on `main` and `develop`, no force push/delete; Kunal approves (CODEOWNERS), admin may merge own PRs (status checks not required on branch creation)
 - [x] CI `pr-source` check: PRs into `main` only from `develop` or `hotfix/*`
 - [x] AGENTS.md, RELEASES.md, HANDOFF.md describe the flow
 
@@ -98,9 +98,9 @@ As a cashier without email, I want to log in with my phone number, so that I can
 
 ### US-RBAC-01 · Permission keys
 As a developer, I want one list of permission keys shared by API and web, so that both check the same thing.
-- Phase 1 · Must · Not started
-- [ ] Keys in `packages/shared/src/permissions.ts`; default roles built from them
-- [ ] API guard `@Can('key')` on every route; refused calls return 403 with a clear message
+- Phase 1 · Must · Done
+- [x] Keys in `packages/shared/src/permissions.ts`; default roles built from them
+- [x] API guard `@Can('key')` on every route; refused calls return 403 with a clear message (global guard, deny by default; `@Public()` for open routes; test fails if a route has neither)
 
 ### US-RBAC-02 · Sidebar built from permissions
 As any user, I want to see only the menu items I can use, so that the app is simple for me.

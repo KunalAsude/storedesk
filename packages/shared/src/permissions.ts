@@ -1,6 +1,6 @@
 // Single source of permission keys. The API guards (@Can) and the web app (useCan)
 // both read this file, so a page that is hidden in the UI is also refused by the API.
-import type { UserRole } from "./roles";
+import { ROLE_LABELS, type RoleKey, type UserRole } from "./roles";
 
 export const PERMISSIONS = [
   "dashboard.view",
@@ -55,4 +55,11 @@ export const ROLE_PERMISSIONS: Record<UserRole, readonly Permission[]> = {
 
 export function hasPermission(role: UserRole, permission: Permission): boolean {
   return ROLE_PERMISSIONS[role].includes(permission);
+}
+
+/** Same check by database role key (`cashier`, `stock_staff`…), used by the API. */
+export function roleKeyCan(role: RoleKey, permission: Permission): boolean {
+  // Unknown key (old token, renamed role) → no permission, never a crash.
+  if (!Object.hasOwn(ROLE_LABELS, role)) return false;
+  return hasPermission(ROLE_LABELS[role], permission);
 }
